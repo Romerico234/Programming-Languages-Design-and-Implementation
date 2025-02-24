@@ -1,0 +1,7 @@
+#########################################
+# Lines starting with '#' are comments. #
+#########################################
+
+The dog chases the cat.
+
+# The slow, lazy dog chases the fast cat.
