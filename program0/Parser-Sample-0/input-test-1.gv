@@ -1,0 +1,25 @@
+digraph ParseTree {
+	0 [label="Parse Tree", shape=plaintext];
+	0 -> {1 [label="<START>", shape=rect, style=dotted]};
+	1 -> {2 [label="<SENTENCE>", shape=rect, style=dotted]};
+	2 -> {3 [label="<NOUN_PHRASE>", shape=rect, style=dotted]};
+	3 -> {4 [label="<ARTICLE>", shape=rect, style=dotted]};
+	4 -> {5 [label="The", shape=oval, style=bold]};
+	3 -> {6 [label="<ADJ_LIST>", shape=rect, style=dotted]};
+	6 -> {7 [label="&epsilon;", shape=plaintext]};
+	3 -> {8 [label="<NOUN>", shape=rect, style=dotted]};
+	8 -> {9 [label="dog", shape=oval, style=bold]};
+	2 -> {10 [label="<VERB_PHRASE>", shape=rect, style=dotted]};
+	10 -> {11 [label="<VERB>", shape=rect, style=dotted]};
+	11 -> {12 [label="chases", shape=oval, style=bold]};
+	2 -> {13 [label="<NOUN_PHRASE>", shape=rect, style=dotted]};
+	13 -> {14 [label="<ARTICLE>", shape=rect, style=dotted]};
+	14 -> {15 [label="the", shape=oval, style=bold]};
+	13 -> {16 [label="<ADJ_LIST>", shape=rect, style=dotted]};
+	16 -> {17 [label="&epsilon;", shape=plaintext]};
+	13 -> {18 [label="<NOUN>", shape=rect, style=dotted]};
+	18 -> {19 [label="cat", shape=oval, style=bold]};
+	2 -> {20 [label="<PERIOD>", shape=rect, style=dotted]};
+	20 -> {21 [label=".", shape=oval, style=bold]};
+	"1" -> {"SYNTAX ERROR: Expected '$$' but found 'The' (ARTICLE)." [shape=plaintext, color=red]};
+}
