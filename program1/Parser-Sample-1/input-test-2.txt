@@ -1,0 +1,12 @@
+# Multiple Lines... looking more like a "programming language's syntax"!
+#
+# Note, this example is not the strangest programming language I've seen. For that, see:
+#        https://www.dangermouse.net/esoteric/chef_fib.html
+
+
+the slow, lazy dog
+    quickly chases the
+        cat up a
+        tall tree
+    and the rat slowly chases
+the dog .
