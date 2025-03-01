@@ -78,6 +78,42 @@ class Parser {
 // !!!!!!!!!!!!!!!!!!! CODE MODIFICATIONS SHOULD BE MADE BELOW THIS LINE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // 
+    // UPDATED GRAMMAR for Program 0:
+    //
+    // <START>  -> <SENTENCE> $$
+    //
+    // <SENTENCE> -> <NOUN_PHRASE> <VERB_PHRASE> <NOUN_PHRASE> <PREP_PHRASE> <SENTENCE_TAIL>
+    //
+    // <SENTENCE_TAIL> -> 'and' <SENTENCE> | 'or' <SENTENCE> | <PUNCTUATION>
+    //
+    // <PREP_PHRASE>  -> <PREPOSITION> <NOUN_PHRASE> | ε
+    //
+    // <NOUN_PHRASE>  -> <ARTICLE> <ADJ_LIST> <NOUN>
+    //
+    // <VERB_PHRASE>  -> <ADVERB> <VERB> | <VERB>
+    //
+    // <ADJ_LIST>     -> <ADJECTIVE> <ADJ_TAIL> | ε
+    //
+    // <ADJ_TAIL>     -> <COMMA> <ADJECTIVE> <ADJ_TAIL> | ε
+    //
+    // <ARTICLE>      -> 'a' | 'an' | 'the'
+    //
+    // <NOUN>         -> 'dog' | 'cat' | 'rat' | 'fox' | 'tree' | 'house'
+    //
+    // <VERB>         -> 'jumps' | 'chases' | 'climbs'
+    //
+    // <ADJECTIVE>    -> 'fast' | 'slow' | 'lazy' | 'tall'
+    //
+    // <ADVERB>       -> 'quickly' | 'slowly'
+    //
+    // <PREPOSITION>  -> 'around' | 'up' | 'over' | 'under'
+    //
+    // <COMMA>        -> ','
+    //
+    // <PUNCTUATION>  -> '.' | '!'
+    //
+
     // <START> :== <SENTENCE> $$
     // NOTE: The name of this method should not change unless you also change the invocation from "analyze" below.
     private void START(final TreeNode parentNode) throws ParseException {
@@ -90,7 +126,7 @@ class Parser {
         MATCH(thisNode, TokenSet.$$);
     }
 
-    // <SENTENCE> ::= <NOUN_PHRASE> <VERB_PHRASE> <NOUN_PHRASE> <PERIOD>
+    // <SENTENCE> ::= <NOUN_PHRASE> <VERB_PHRASE> <NOUN_PHRASE> <PREP_PHRASE> <SENTENCE_TAIL>
     private void SENTENCE(final TreeNode parentNode) throws ParseException {
         final TreeNode thisNode = codeGenerator.addNonTerminal(parentNode, "<SENTENCE>");
 
@@ -98,13 +134,46 @@ class Parser {
         NOUN_PHRASE(thisNode);
         VERB_PHRASE(thisNode);
         NOUN_PHRASE(thisNode);
-
-        // No need for another method, as we are just matching a single token.
-        MATCH(thisNode, TokenSet.PERIOD);
+        PREP_PHRASE(thisNode);
+        SENTENCE_TAIL(thisNode);
     }
 
+    // <SENTENCE_TAIL> -> 'and' <SENTENCE> | 'or' <SENTENCE> | <PUNCTUATION>
+    private void SENTENCE_TAIL(final TreeNode parentNode) throws ParseException {
+        final TreeNode thisNode = codeGenerator.addNonTerminal(parentNode, "<SENTENCE_TAIL>");
 
-    // <NOUN_PHRASE> ::= <ART> <ADJ_LIST> <NOUN>
+        // Decide which path: conjunction or punctuation.
+        var currentToken = lexer.getCurrentToken();
+
+        if (currentToken == TokenSet.CONJUNCTION) {
+            // MATCH "and" or "or"
+            MATCH(thisNode, TokenSet.CONJUNCTION);
+            // Then parse another <SENTENCE>
+            SENTENCE(thisNode);
+        }
+        else if (currentToken == TokenSet.PUNCTUATION) {
+            // Match punctuation ('.' or '!')
+            MATCH(thisNode, TokenSet.PUNCTUATION);
+        }
+        else {
+            codeGenerator.syntaxError(thisNode,
+                    "SYNTAX ERROR in <SENTENCE_TAIL>: Expected 'and', 'or', or punctuation but found '%s'.".formatted(lexer.getCurrentLexeme()));
+        }
+    }
+
+    // <PREP_PHRASE> -> <PREPOSITION> <NOUN_PHRASE> | ε
+    private void PREP_PHRASE(final TreeNode parentNode) throws ParseException {
+        final TreeNode thisNode = codeGenerator.addNonTerminal(parentNode, "<PREP_PHRASE>");
+
+        if (lexer.getCurrentToken() == TokenSet.PREPOSITION) {
+            MATCH(thisNode, TokenSet.PREPOSITION);
+            NOUN_PHRASE(thisNode);
+        } else {
+            EPSILON(thisNode);
+        }
+    }
+
+    // <NOUN_PHRASE> ::=<ARTICLE> <ADJ_LIST> <NOUN>
     private void NOUN_PHRASE(final TreeNode parentNode) throws ParseException {
         final TreeNode thisNode = codeGenerator.addNonTerminal(parentNode, "<NOUN_PHRASE>");
 
