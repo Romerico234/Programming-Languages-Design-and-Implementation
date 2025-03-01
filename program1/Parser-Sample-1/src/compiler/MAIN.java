@@ -1,14 +1,15 @@
 //  ********* REQUIRES Java 21 OR ABOVE! (https://adoptium.net/) *********
 package compiler;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import static java.nio.file.Files.lines;
 import java.nio.file.Path;
+import static java.text.MessageFormat.format;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
@@ -18,9 +19,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import static java.nio.file.Files.lines;
-import static java.text.MessageFormat.format;
+import javax.swing.*;
 
 /*
  * COSC455 Programming Languages: Implementation and Design.

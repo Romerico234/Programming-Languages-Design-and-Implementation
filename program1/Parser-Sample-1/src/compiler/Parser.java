@@ -1,3 +1,9 @@
+/*
+COURSE: COSC455-002
+Assignment: Program 1
+Name: David, Romerico
+*/
+
 //  ************** REQUIRES JAVA 21 or later! (https://adoptium.net/) ************** //
 package compiler;
 
